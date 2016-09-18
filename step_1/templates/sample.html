@@ -1,0 +1,45 @@
+<html>
+<head>
+    <title>Editor</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="jumbotron">
+            <h1>Collaborative Editor</h1>
+            <p>Real time, collaborative text box.</p>
+        </div>
+        <form>
+            <div class="form-group">
+                <label for="comment">Enter some text:</label>
+                <textarea class="form-control" rows="15" id="text-area"></textarea>
+            </div>
+        </form>
+   </div>
+    <script type="text/javascript" 
+                src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.5/socket.io.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var url = "http://" + document.domain + ":" + location.port;
+            var socket = io.connect(url + "/pypy");
+
+            $("#text-area").keyup(function(event) {
+                socket.emit('text', {'text': $('#text-area').val()});
+                return false;
+            });
+
+
+            socket.on('text', function(msg) {
+                $("#text-area").val(msg['text']);
+            });
+            
+        });
+    </script>
+</body>
+</html>
